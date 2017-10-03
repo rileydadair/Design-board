@@ -1,0 +1,15 @@
+<form>
+  <input type="text" placeholder="Email" ng-model="newEmail">
+  <input type="text" placeholder="Password" ng-model="newPassword">
+  <input type="text" placeholder="Name" ng-model="newName">
+  <input type="text" placeholder="Username" ng-model="newUsername">
+</form>
+<button ng-click="addUser(newEmail, newPassword, newName, newUsername)" ui-sref="user({id: newUsername})">Sign up</button>
+<div ng-repeat="user in users">
+  <!-- <h1>Id: {{user.id}}</h1> -->
+  <h1>Email: {{user.email}}</h1>
+  <h1>Password: {{user.password}}</h1>
+  <h1>Name: {{user.name}}</h1>
+  <h1>Username: {{user.username}}</h1>
+  <!-- <button ng-click="deleteUser(user)">Delete User</button> -->
+</div>

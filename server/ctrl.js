@@ -1,53 +1,83 @@
 module.exports = {
-  //
-  // getUsers: (req, res) => {
-  //   const db = req.app.get('db');
-  //   db.users.find({})
-  //     .then(results => {
-  //       res.json(results);
-  //     })
-  //     .catch(err => {
-  //       res.json(err);
-  //     })
-  // },
-  // deleteUser: (req, res) => {
-  //   const db = req.app.get('db');
-  //
-  //   db.delete_user(req.params.id)
-  //     .then(results => {
-  //       res.json(results);
-  //     })
-  //     .catch(err => {
-  //       res.json(err);
-  //     })
-  // }
 
-  getUsers(req, res) {
-    req.app
-      .get('db')
-      .run('select * from users;')
-      .then(users => res.json(users));
+  checkUser: (req, res) => {
+    const username = req.body.username;
+    const db = req.app.get('db');
+    db.get_users().then((users) => {
+      const person = users.find(cur => cur.username == username);
+      if(!person) {
+        res.send({ validUser: 'create new user'});
+      }
+      res.send({ validUser: 'username already exists' });
+    })
   },
-  addUser(req, res) {
+
+  createUser(req, res) {
     req.app
       .get('db')
       .add_user(req.body)
       .then(users => res.json(users))
       .catch(err => res.json(err));
   },
-  deleteUser(req, res) {
+
+  login: (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+    const db = req.app.get('db');
+    db.get_users().then((users) => {
+      const person = users.find(cur => cur.username == username);
+      if(!person) {
+        res.send({ validUser: 'no user'});
+      }
+      if (person.password != password) {
+        res.send({ validUser: 'incorrect password' });
+      }
+      req.session.user = person;
+      res.send({ validUser: 'valid', user: req.session.user })
+    })
+  },
+
+  checkBoard: (req, res) => {
+    const name = req.body.name;
+    const id = req.body.id;
+    const db = req.app.get('db');
+    db.get_boards([id]).then((boards) => {
+      const board = boards.find(cur => cur.name == name);
+      if(!board) {
+        res.send({validBoard: 'create new board'});
+      }
+      res.send({validBoard: 'board already exists'});
+    })
+  },
+
+  createBoard: (req, res) => {
+    const name = req.body.name;
+    const id = req.body.id;
+    const db = req.app.get('db');
+    db.add_board([ name, id ])
+    .then(board => res.send(board))
+    .catch(err => res.json(err));
+  },
+
+  getBoards(req, res) {
     req.app
       .get('db')
-      .delete_user(req.params.id)
-      .then(users => res.json(users))
+      .get_boards(req.params.id)
+      .then(boards => res.json(boards))
       .catch(err => res.json(err));
   },
-  getUserInfo(req, res) {
-    req.app
-      .get('db')
-      .get_user_info(req.params.id)
-      .then(users => res.json(users))
-      .catch(err => res.json(err));
-  }
 
+  // getBoardResults(req, res) {
+  //   req.app
+  //     .get('db')
+  //     .get_board_results(req.body)
+  // }
+
+  // getUserInfo(req, res) {
+  //   req.app
+  //     .get('db')
+  //     .get_user_info(req.params.id)
+  //     .then(users => res.json(users))
+  //     .catch(err => res.json(err));
+  // }
 }

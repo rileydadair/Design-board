@@ -5,7 +5,8 @@ const session = require('express-session');
 const massive = require('massive');
 const port = 3000;
 const app = express();
-const { dbUser, database } = require('./server/config');
+const ctrl = require('./server/ctrl.js');
+const { secret, dbUser, database } = require('./server/config');
 
 // Database connection information
 const connectionString = `postgres://${dbUser}@localhost/${database}`;
@@ -19,14 +20,27 @@ massive(connectionString).then(db => {
 app.use(json());
 app.use(cors());
 app.use('/', express.static(__dirname + '/public'));
+app.use(session({
+  secret,
+  resave: true,
+  saveUninitialized: true
+}))
+// if not logged in, send error message and catch in resolve
+// else send user
+app.get('/auth/me', (req, res) => {
+    if (!req.session.user) return res.status(401).json({err: 'User Not Authenticated'});
+    res.status(200).json(req.session.user);
+});
 
-const ctrl = require('./server/ctrl.js');
-
-app.get('/api/users', ctrl.getUsers);
-app.post('/api/users/add/', ctrl.addUser);
-app.delete('/api/users/:id', ctrl.deleteUser);
-
-app.get('/api/user/:id', ctrl.getUserInfo);
+// Endpoints
+app.post('/api/user/checkUser', ctrl.checkUser);
+app.post('/api/user/createUser', ctrl.createUser);
+app.post('/api/user/login', ctrl.login);
+app.post('/api/user/checkBoard', ctrl.checkBoard)
+app.post('/api/user/createBoard', ctrl.createBoard);
+app.get('/api/user/getBoards/:id', ctrl.getBoards);
+// app.get('/api/user/getBoardResults', ctrl.getBoardResults);
+// app.get('/api/user/:id', ctrl.getUserInfo);
 
 app.listen(port, function() {
   console.log('Server listening on port', port);

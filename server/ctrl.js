@@ -67,11 +67,21 @@ module.exports = {
       .catch(err => res.json(err));
   },
 
-  // getBoardResults(req, res) {
-  //   req.app
-  //     .get('db')
-  //     .get_board_results(req.body)
-  // }
+  addImage(req, res) {
+    req.app
+      .get('db')
+      .add_image(req.body)
+      .then(image => res.json(image))
+      .catch(err => res.json(err));
+  },
+
+  getBoardImages(req, res) {
+    req.app
+      .get('db')
+      .get_board_images(req.params.id)
+      .then(images => res.json(images))
+      .catch(err => res.json(err));
+  }
 
   // getUserInfo(req, res) {
   //   req.app

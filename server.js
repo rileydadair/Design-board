@@ -39,7 +39,9 @@ app.post('/api/user/login', ctrl.login);
 app.post('/api/user/checkBoard', ctrl.checkBoard)
 app.post('/api/user/createBoard', ctrl.createBoard);
 app.get('/api/user/getBoards/:id', ctrl.getBoards);
-// app.get('/api/user/getBoardResults', ctrl.getBoardResults);
+app.get('/api/user/getBoardImages/:id', ctrl.getBoardImages);
+app.post('/api/user/addImage', ctrl.addImage);
+
 // app.get('/api/user/:id', ctrl.getUserInfo);
 
 app.listen(port, function() {

@@ -7,7 +7,6 @@ app.controller('profileCtrl', function($scope, $location, mainSrvc, user) {
 
   // Get user boards
   mainSrvc.getBoards(user).then(response => {
-    console.log(response);
     $scope.boards = response.data;
   })
 
@@ -26,7 +25,7 @@ app.controller('profileCtrl', function($scope, $location, mainSrvc, user) {
         else {
           console.log(board);
           mainSrvc.createBoard(board).then(response => {
-            console.log(response.data[0]);
+            // console.log(response.data[0]);
             $location.path('/board/' + response.data[0].board_id + '/' + response.data[0].name);
           })
         }

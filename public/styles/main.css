@@ -38,3 +38,8 @@ body {
   font-size: 20px;
   cursor: pointer;
 }
+
+.board-image {
+  width: 33.3333333%;
+  height: auto;
+}

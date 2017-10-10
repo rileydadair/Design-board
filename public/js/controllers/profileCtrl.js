@@ -1,12 +1,34 @@
-app.controller('profileCtrl', function($scope, $location, mainSrvc, user) {
+app.controller('profileCtrl', function($scope, $location, $stateParams, mainSrvc) {
 
-  if(user.data) {
-    $location.path('/')
-  };
-  $scope.user = user;
+  // if(user.data) {
+  //   $location.path('/')
+  // };
+  // $scope.user = user;
 
   // Get user boards
-  mainSrvc.getBoards(user).then(response => {
+
+
+  // firebase.auth().onAuthStateChanged(user => {
+  //       if (user) {
+  //           this.user = user
+  //           return user
+  //           console.log(user);
+  //       };
+  //       // else { ng-show set to false }
+  //       console.log(this.user);
+  // })
+
+// $scope.noUser = mainSrvc.noUser;
+
+
+mainSrvc.getUser($stateParams).then(response => {
+  // console.log(response);
+  $scope.user = response.data[0];
+})
+
+  mainSrvc.getBoards($stateParams)
+  .then(response => {
+    // console.log(response);
     $scope.boards = response.data;
   })
 
@@ -17,7 +39,7 @@ app.controller('profileCtrl', function($scope, $location, mainSrvc, user) {
       console.log('Please enter name');
     }
     else {
-      board.id = user.id;
+      board.id = $stateParams.id;
       mainSrvc.checkBoard(board).then(response => {
         if(response.data.validBoard == 'board already exists') {
           console.log('This board already exists');
@@ -25,17 +47,25 @@ app.controller('profileCtrl', function($scope, $location, mainSrvc, user) {
         else {
           console.log(board);
           mainSrvc.createBoard(board).then(response => {
-            // console.log(response.data[0]);
-            $location.path('/board/' + response.data[0].board_id + '/' + response.data[0].name);
+            const boardId = response.data[0].board_id
+            console.log(response.data[0]);
+            $location.path('/board/' + boardId);
           })
         }
       })
     }
-
-
   };
 
   $scope.hideModal = () => {
     $scope.showModal = false;
   };
+
+  $scope.deleteBoard = (board) => {
+    const userId = parseInt($stateParams.id);
+    // console.log(board, userId);
+    mainSrvc.deleteBoard(board, userId).then(response => {
+      $scope.boards = response.data;
+    })
+  }
+
 });

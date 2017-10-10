@@ -1,5 +1,5 @@
 module.exports = {
-  secret: 'supersecret',
+  // secret: 'supersecret',
   dbUser: 'riley',
   database: 'designBoard'
 }

@@ -1,13 +1,13 @@
 const express = require('express');
 const { json } = require('body-parser');
 const cors = require('cors');
-const session = require('express-session');
+// Session - const session = require('express-session');
 const massive = require('massive');
 const port = 3000;
 const app = express();
 const ctrl = require('./server/ctrl.js');
-const { secret, dbUser, database } = require('./server/config');
-
+// Session - const { secret, dbUser, database } = require('./server/config');
+const { dbUser, database } = require('./server/config');
 // Database connection information
 const connectionString = `postgres://${dbUser}@localhost/${database}`;
 
@@ -20,29 +20,39 @@ massive(connectionString).then(db => {
 app.use(json());
 app.use(cors());
 app.use('/', express.static(__dirname + '/public'));
-app.use(session({
-  secret,
-  resave: true,
-  saveUninitialized: true
-}))
+
+
+// Session -
+// app.use(session({
+//   secret,
+//   resave: true,
+//   saveUninitialized: true
+// }))
 // if not logged in, send error message and catch in resolve
 // else send user
-app.get('/auth/me', (req, res) => {
-    if (!req.session.user) return res.status(401).json({err: 'User Not Authenticated'});
-    res.status(200).json(req.session.user);
-});
+// app.get('/auth/me', (req, res) => {
+//     if (!req.session.user) return res.status(401).json({err: 'User Not Authenticated'});
+//     res.status(200).json(req.session.user);
+// });
 
 // Endpoints
 app.post('/api/user/checkUser', ctrl.checkUser);
-app.post('/api/user/createUser', ctrl.createUser);
+app.post('/api/users/createUser', ctrl.createUser);
 app.post('/api/user/login', ctrl.login);
 app.post('/api/user/checkBoard', ctrl.checkBoard)
 app.post('/api/user/createBoard', ctrl.createBoard);
+app.post('/api/user/deleteBoard', ctrl.deleteBoard);
 app.get('/api/user/getBoards/:id', ctrl.getBoards);
-app.get('/api/user/getBoardImages/:id', ctrl.getBoardImages);
+app.post('/api/user/getBoardName', ctrl.getBoardName);
 app.post('/api/user/addImage', ctrl.addImage);
+app.post('/api/user/addsite', ctrl.addSite);
+app.post('/api/user/deleteImage', ctrl.deleteImage);
+app.post('/api/user/deleteSite', ctrl.deleteSite);
+app.get('/api/user/getBoardImages/:id', ctrl.getBoardImages);
+app.post('/api/user/getBoardSites', ctrl.getBoardSites);
 
-// app.get('/api/user/:id', ctrl.getUserInfo);
+app.get('/api/user/:id', ctrl.getUserId);
+app.get('/api/user/getUser/:id', ctrl.getUser);
 
 app.listen(port, function() {
   console.log('Server listening on port', port);

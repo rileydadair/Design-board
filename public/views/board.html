@@ -1,14 +1,75 @@
 <h1>{{ boardName }}</h1>
 <section>
   <form name="form">
-    <img style="width: 300px;" ngf-thumbnail="image || '../assets/img/placeholder.png'">
-    <button name="image" ngf-select ng-model="image">Upload image</button>
-    <button ng-click="submit()">Submit</button>
+
+
+    <!-- <img style="width: 300px;" ngf-thumbnail="image || '../assets/img/placeholder.png'"> -->
+
+
+    <div ngf-drop="upload($file)" class="drop-box"
+      ngf-drag-over-class="'dragover'"
+      ngf-pattern="'image/*,application/pdf'">DRAG &amp; DROP your file</div>
+    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+
+    <!-- <button name="image" ngf-select ng-model="image">Upload image</button> -->
+    <p>or</p>
+    <button class="button" ngf-select="upload($file)">Browse</button>
+    <!-- <button ng-click="submit()">Submit</button> -->
+  </form>
+  <br>
+  <form>
+    <input type="text" ng-model="site">
+    <label>Website</label>
+    <button ng-click="addSite(site)">Save</button>
   </form>
 </section>
 
-<section>
-  <div ng-repeat="image in images">
-    <img class="board-image" ng-src="{{ image.image_url }}">
+
+<!-- <div class="thumbnail-width">
+  <div class="thumbnail-container">
+  <div class="thumbnail">
+    <iframe src="{{ site }}" frameborder="0" onload="this.style.opacity = 1"></iframe>
   </div>
+  </div>
+</div> -->
+
+
+<!-- <iframe class="iframe-test" frameborder="0" scrolling="no"
+   src="../assets/img/placeholder.png" name="imgbox" id="imgbox">
+   <p>iframes are not supported by your browser.</p>
+</iframe>
+
+<div class="thumbnail-container">
+  <div class="thumbnail">
+   <iframe src="http://www.iamsacha.nl/" frameborder="0"></iframe>
+  </div>
+</div>
+
+<iframe class="board-image" src="https://designcode.io/" height="180px" scrolling="no"></iframe> -->
+
+<section>
+  <!-- <div ng-repeat="image in images">
+    <img class="board-image" ng-src="{{ image.image_url }}">
+    <button ng-click="deleteImage(image)">X</button>
+  </div> -->
+
+  <div class="thumbnail-image-container" ng-repeat="image in images">
+    <div class="thumbnail-container">
+    <div class="thumbnail">
+      <img class="board-image" ng-src="{{ image.image_url }}">
+    </div>
+    </div>
+    <button ng-click="deleteImage(image)">X</button>
+  </div>
+
+  <div class="thumbnail-site-container" ng-repeat="site in sites">
+    <div class="thumbnail-container">
+    <div class="thumbnail">
+      <iframe ng-src="{{ site.trusted_url }}" frameborder="0" onload="this.style.opacity = 1"></iframe>
+    </div>
+    </div>
+    <button ng-click="deleteSite(site)">X</button>
+  </div>
+
 </section>

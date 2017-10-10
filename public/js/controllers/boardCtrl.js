@@ -1,35 +1,30 @@
-app.controller('boardCtrl', function($scope, $location, $stateParams, mainSrvc, user) {
+app.controller('boardCtrl', function($scope, $location, $stateParams, $sce, mainSrvc) {
 
-  if(user.data) {
-    $location.path('/')
-  };
-  $scope.user = user;
-  // Board name passed in from stateParams from ui-sref and $location in
-  // profileCtrl.js
-  $scope.boardName = $stateParams.name;
+  // if(user.data) {
+  //   $location.path('/')
+  // };
+  // $scope.user = user;
   const boardId = $stateParams.board_id;
 
-  // Get all board data
+  mainSrvc.getBoardName(boardId).then(response => {
+    $scope.boardName = response.data[0].name;
+  })
   mainSrvc.getBoardImages($stateParams).then(response => {
-    console.log(response);
     $scope.images = response.data.reverse();
+  })
+  mainSrvc.getBoardSites(boardId).then(response => {
+    console.log(response);
+
+    $scope.sites = response.reverse();
   })
 
   // ngFileUpload - if image has been selected, invoke upload()
-
-
-
-
-  $scope.submit = () => {
-      if ($scope.form.image.$valid && $scope.image) {
-        $scope.upload($scope.image);
-      }
-      else {console.log('no image');}
-    };
-
-  // $scope.upload = function(file) {
-  //   mainSrvc.upload(file);
-  // }
+  // $scope.submit = () => {
+  //     if ($scope.form.image.$valid && $scope.image) {
+  //       $scope.upload($scope.image);
+  //     }
+  //     else {console.log('no image');}
+  //   };
 
   // Upload Image to firebase
   $scope.upload = (file) => {
@@ -62,7 +57,6 @@ app.controller('boardCtrl', function($scope, $location, $stateParams, mainSrvc, 
 
       // pass download url to database
       console.log(downloadURL);
-
       mainSrvc.addImage(downloadURL, boardId).then(() => {
         mainSrvc.getBoardImages($stateParams).then((response) => {
           $scope.images = response.data.reverse();
@@ -70,4 +64,43 @@ app.controller('boardCtrl', function($scope, $location, $stateParams, mainSrvc, 
       });
     });
   }
+
+  $scope.deleteImage = (image) => {
+    console.log(image);
+    const url = image.image_url;
+    const boardId = image.board_id
+    mainSrvc.deleteImage(url, boardId).then(response => {
+      $scope.images = response.data.reverse();
+    })
+  }
+
+  $scope.addSite = (site) => {
+    if(!site){
+      console.log('please enter site');
+    }
+    else {
+      const boardId = $stateParams.board_id;
+      console.log(boardId);
+      mainSrvc.addSite(site, boardId).then(() => {
+        mainSrvc.getBoardSites(boardId).then(response => {
+          console.log(response);
+
+          $scope.sites = response.reverse();
+        })
+      })
+    }
+  }
+
+  $scope.deleteSite = (site) => {
+    console.log(site);
+    const url = site.site_url;
+    const boardId = site.board_id
+    mainSrvc.deleteSite(url, boardId).then(() => {
+      mainSrvc.getBoardSites(boardId).then(response => {
+        console.log(response);
+        $scope.sites = response.reverse();
+      })
+    })
+  }
+
 });

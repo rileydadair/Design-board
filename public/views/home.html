@@ -1,5 +1,4 @@
-<!-- Sign in -->
-<section ng-show="showSignin">
+<!-- <section ng-show="showSignin">
   <h1>Sign in</h1>
   <form>
     <input type="text" placeholder="username" ng-model="user.username">
@@ -11,7 +10,6 @@
   <a href="" ng-click="hideSignin()">Join</a>
 </section>
 
-<!-- Join -->
 <section ng-show="showJoin">
   <h1>Join</h1>
   <form>
@@ -24,4 +22,57 @@
   <br>
   <p>Already have an account?</p>
   <a href="" ng-click="hideJoin()">Sign in</a>
-</section>
+</section> -->
+
+<!-- Signin -->
+<form ng-show="showSignin">
+    <p class="h5 text-center mb-4">Sign in</p>
+    <div class="md-form">
+        <i class="fa fa-envelope prefix grey-text"></i>
+        <input type="text" id="defaultForm-email" class="form-control" ng-model="user.email">
+        <label for="defaultForm-email">Email</label>
+    </div>
+    <div class="md-form">
+        <i class="fa fa-lock prefix grey-text"></i>
+        <input type="password" id="defaultForm-pass" class="form-control" ng-model="user.password">
+        <label for="defaultForm-pass">Password</label>
+        <div>{{ error }}</div>
+    </div>
+    <br>
+    <div class="text-center">
+      <button class="btn btn-default" ng-click="signIn(user)">Login</button>
+    </div>
+    <br>
+    <p>Don't have an account?</p>
+    <a href="" ng-click="hideSignin()">Signup</a>
+</form>
+
+
+<!-- Signup -->
+<form ng-show="showSignup">
+    <p class="h5 text-center mb-4">Signup</p>
+    <div class="md-form">
+        <i class="fa fa-user prefix grey-text"></i>
+        <input type="text" id="orangeForm-name" class="form-control" ng-model="name">
+        <label for="orangeForm-name">Full Name</label>
+    </div>
+    <div class="md-form">
+        <i class="fa fa-envelope prefix grey-text"></i>
+        <input type="text" id="orangeForm-email" class="form-control" ng-model="email">
+        <label for="orangeForm-email">Email</label>
+    </div>
+    <div class="md-form">
+        <i class="fa fa-lock prefix grey-text"></i>
+        <input type="password" id="orangeForm-pass" class="form-control" ng-model="password">
+        <label for="orangeForm-pass">Password</label>
+    </div>
+    <br>
+    <div class="text-center">
+      <button class="btn btn-deep-orange" ng-click="createUser(name, email, password)">Sign up</button>
+    </div>
+    <br>
+    <p>Already have an account?</p>
+    <a href="" ng-click="hideSignUp()">Signin</a>
+</form>
+<br>
+<button class="btn btn-caution" ng-click="signOut()">Sign Out</button>

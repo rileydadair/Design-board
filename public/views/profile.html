@@ -1,16 +1,10 @@
 <section>
-  <h2>{{user.username}}</h2>
-  <br>
-  <strong>Name:</strong> {{user.name}} <br>
-  <strong>Email:</strong> {{user.email}} <br>
+  <h2>{{ user.name }}</h2>
   <br>
   <p>Create board</p>
   <button ng-click="showModal=true">+</button>
   <br>
   <br>
-  <div ng-repeat="board in boards">
-    <div ui-sref="board({ board_id: board.board_id, name: board.name })">{{ board.name }}</div>
-  </div>
 </section>
 
 <!-- Create board modal -->
@@ -23,4 +17,9 @@
   </form>
   <br>
   <button ng-click="createBoard(board)">Create</button>
+</section>
+
+<section ng-repeat="board in boards">
+  <div ui-sref="board({ board_id: board.board_id, name: board.name })">{{ board.name }}</div>
+  <button ng-click="deleteBoard(board.board_id)">X</button>
 </section>

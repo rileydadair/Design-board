@@ -19,26 +19,43 @@
 
 <!-- Saved images and sites -->
 <section>
-  <div class="thumbnail-site-container" ng-repeat="site in sites">
+  <div class="thumbnail-site-container" ng-repeat="image in images">
     <div class="thumbnail-container">
     <div class="thumbnail">
-      <iframe ng-src="{{ site.trusted_url }}" frameborder="0" onload="this.style.opacity = 1"></iframe>
-    </div>
-    </div>
-    <button ng-click="deleteSite(site)">X</button>
-  </div>
 
-  <div class="thumbnail-image-container" ng-repeat="image in images">
-    <div class="thumbnail-container">
-    <div class="thumbnail">
+
+      <iframe ng-src="{{ image.site_url }}" frameborder="0" onload="this.style.opacity = 1"></iframe>
       <img class="board-image" ng-src="{{ image.image_url }}">
     </div>
     </div>
     <button ng-click="deleteImage(image)">X</button>
   </div>
 
-  <!-- <div ng-repeat="image in images">
-    <img class="board-image" ng-src="{{ image.image_url }}">
+
+
+
+  <!-- <div class="thumbnail-image-container" ng-repeat="image in images">
+    <p contenteditable="true">{{ image.title }}</p>
+
+    <div class="thumbnail-container">
+    <div class="thumbnail">
+      <img class="board-image" ng-src="{{ image.image_url }}">
+    </div>
+    </div>
+
+    <div class="thumbnail-container">
+    <div class="thumbnail">
+      <iframe ng-src="{{ image.site_url }}" frameborder="0" onload="this.style.opacity = 1"></iframe>
+    </div>
+    </div>
+
     <button ng-click="deleteImage(image)">X</button>
   </div> -->
+
+
 </section>
+
+<!-- <div ng-repeat="image in images">
+  <img class="board-image" ng-src="{{ image.image_url }}">
+  <button ng-click="deleteImage(image)">X</button>
+</div> -->

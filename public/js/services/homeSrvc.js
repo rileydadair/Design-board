@@ -31,7 +31,7 @@ app.service('homeSrvc',function($http, $location){
           return $http.get(`/user/getUserId/${user.email}`)
           .then(response => {
             console.log(response);
-            $location.path('/directory/' + response.data[0].id);
+            $location.path('/directory' + response.data[0].id);
           })
         })
         .catch(err => {
@@ -77,7 +77,7 @@ app.service('homeSrvc',function($http, $location){
                 let userInfo = [user.uid, user.email, name]
                 // Endpoint - create user
                 return $http.post('/user/createUser', userInfo).then((response) => {
-                  $location.path('/directory/' + response.data[0].id);
+                  $location.path('/directory' + response.data[0].id);
                   console.log(response);
                 })
             })

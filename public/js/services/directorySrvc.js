@@ -25,15 +25,25 @@ app.service('directorySrvc',function($http, $location){
   }
 
   this.getDirectoryImages = (params) => {
-    console.log(params.id);
+    // console.log(params.id);
     // Endpoint - Get board images for directory view
     return $http.get(`/user/getDirectoryImages/${params.id}`)
+  }
+
+  /*
+  Board Route ==================================================================
+  */
+  this.boardRoute = (board) => {
+    const boardId = board.board_id;
+    const userId = board.id;
+    $location.path('/directory' + userId + '/board' + boardId);
   }
 
   /*
   Create board =================================================================
   */
   this.createNewBoard = (board) => {
+    const userId = board.id
     // Endpoint - check board
     return $http.post('/user/checkBoard', board)
     .then(response => {
@@ -46,7 +56,7 @@ app.service('directorySrvc',function($http, $location){
         return $http.post('/user/createBoard', board)
         .then(response => {
           const boardId = response.data[0].board_id
-          $location.path('/board/' + boardId);
+          $location.path('/directory' + userId + '/board' + boardId);
         })
       }
     })

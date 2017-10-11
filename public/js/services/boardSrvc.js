@@ -18,12 +18,35 @@ app.service('boardSrvc',function($http, $location, $sce){
     return $http.post('/api/user/getBoardName', [ id ]);
   }
 
+  // $sce
   this.getBoardImages = (board) => {
-    return $http.get(`/api/user/getBoardImages/${board.board_id}`);
+    return $http.get(`/api/user/getBoardImages/${board.board_id}`)
+    .then(response => {
+      const results = response.data;
+      const imagesArr = [];
+
+      for(var i = 0; i < results.length; i++){
+        const obj = {
+          board_id: results[i].board_id,
+          image_url: $sce.trustAsResourceUrl(results[i].image_url),
+          site_url: $sce.trustAsResourceUrl(results[i].site_url),
+          reference_url: results[i].reference_url,
+          title: results[i].title,
+          description: results[i].description,
+          image_id: results[i].image_id
+        }
+        imagesArr.push(obj);
+      }
+      return imagesArr;
+
+    })
   }
 
+  // this.getBoardImages = (board) => {
+  //   return $http.get(`/api/user/getBoardImages/${board.board_id}`);
+  // }
+
   this.getBoardSites = (id) => {
-    console.log(id);
     return $http.post('/api/user/getBoardSites', [ id ])
     .then(response => {
       const results = response.data;
@@ -51,8 +74,8 @@ app.service('boardSrvc',function($http, $location, $sce){
     return $http.post('/api/user/addImage', [ image, boardId ]);
   }
 
-  this.deleteImage = (url, boardId) => {
-    return $http.post('/api/user/deleteImage', [ url, boardId ]);
+  this.deleteImage = (imageId, boardId) => {
+    return $http.post('/api/user/deleteImage', [ imageId, boardId ]);
   }
 
   /*
@@ -60,7 +83,29 @@ app.service('boardSrvc',function($http, $location, $sce){
   */
   this.addSite = (site, boardId) => {
     console.log(site, boardId);
-    return $http.post('/api/user/addsite', [ site, boardId ]);
+    return $http.post('/api/user/addsite', [ site, boardId ])
+    .then(response => {
+      console.log(response);
+      const results = response.data;
+      const imagesArr = [];
+
+      for(var i = 0; i < results.length; i++){
+        const obj = {
+          board_id: results[i].board_id,
+          image_url: $sce.trustAsResourceUrl(results[i].image_url),
+          site_url: $sce.trustAsResourceUrl(results[i].site_url),
+          reference_url: results[i].reference_url,
+          title: results[i].title,
+          description: results[i].description,
+          image_id: results[i].image_id
+        }
+        imagesArr.push(obj);
+      }
+      console.log(imagesArr);
+      return imagesArr;
+
+    })
+
   }
 
   this.deleteSite = (url, boardId) => {
@@ -105,20 +150,35 @@ app.service('boardSrvc',function($http, $location, $sce){
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         const downloadURL = uploadTask.snapshot.downloadURL;
         const boardId = file.id;
+        const title = file.title;
         // pass download url to database
-        console.log(downloadURL , boardId);
 
-        resolve({downloadURL, boardId});
+        resolve({downloadURL, boardId, title});
       });
 
     })
-    .then(({downloadURL, boardId}) => {
+    .then(({downloadURL, boardId, title}) => {
       // const {downloadURL, boardId} = obj
-      console.log(downloadURL, boardId);
-      return $http.post('/api/user/addImage', [ downloadURL, boardId ])
+      console.log(downloadURL, boardId, title);
+      return $http.post('/api/user/addImage', [ downloadURL, boardId, title ])
       .then(response => {
-        console.log(response.data);
-        return response;
+        console.log(response);
+        const results = response.data;
+        const imagesArr = [];
+
+        for(var i = 0; i < results.length; i++){
+          const obj = {
+            boardId: results[i].board_id,
+            image_url: $sce.trustAsResourceUrl(results[i].image_url),
+            site_url: $sce.trustAsResourceUrl(results[i].site_url),
+            reference_url: results[i].reference_url,
+            title: results[i].title,
+            description: results[i].description,
+            imageId: results[i].image_id
+          }
+          imagesArr.push(obj);
+        }
+        return imagesArr;
       })
     })
   }

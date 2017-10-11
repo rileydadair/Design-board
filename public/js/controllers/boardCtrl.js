@@ -17,19 +17,20 @@ app.controller('boardCtrl', function($scope, $timeout, $location, $stateParams, 
     $scope.boardName = response.data[0].name;
   })
   boardSrvc.getBoardImages($stateParams).then(response => {
-    $scope.images = response.data;
+    console.log(response);
+    $scope.images = response;
   })
   boardSrvc.getBoardSites(boardId).then(response => {
-    console.log(response);
     $scope.sites = response;
   })
 
   // Delete image
   $scope.deleteImage = (image) => {
+    const imageId = image.image_id;
+    const boardId = image.board_id;
     console.log(image);
-    const url = image.image_url;
-    const boardId = image.board_id
-    boardSrvc.deleteImage(url, boardId).then(response => {
+    boardSrvc.deleteImage(imageId, boardId).then(response => {
+      console.log(response);
       $scope.images = response.data;
     })
   }
@@ -42,10 +43,9 @@ app.controller('boardCtrl', function($scope, $timeout, $location, $stateParams, 
     else {
       const boardId = $stateParams.board_id;
       console.log(boardId);
-      boardSrvc.addSite(site, boardId).then(() => {
-        boardSrvc.getBoardSites(boardId).then(response => {
-          $scope.sites = response;
-        })
+      boardSrvc.addSite(site, boardId).then(response => {
+        console.log(response);
+        $scope.images = response;
       })
     }
   }
@@ -68,15 +68,16 @@ app.controller('boardCtrl', function($scope, $timeout, $location, $stateParams, 
     Update $scope.images
   */
   $scope.upload = (file) => {
+    const name = file.name
+    file.title = name.replace(/.([^.]*)$/,'')
     file.id = boardId;
+    console.log(file);
     boardSrvc.upload(file)
     .then(response => {
       $timeout(function(){
-        $scope.images = response.data;
+        $scope.images = response;
         console.log(response);
       }, 0)
-
-
     })
   }
 

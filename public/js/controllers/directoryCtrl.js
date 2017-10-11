@@ -19,11 +19,17 @@ app.controller('directoryCtrl', function($scope, $location, $stateParams, direct
     console.log(response.data);
     $scope.boards = response.data;
 
-    directorySrvc.getDirectoryImages($stateParams).then(response => {
-      console.log(response);
-      $scope.images = response.data
-    })
+    // directorySrvc.getDirectoryImages($stateParams).then(response => {
+    //   console.log(response.data);
+    //   $scope.images = response.data
+    // })
   })
+
+  // Board route
+  $scope.boardRoute = (board) => {
+    board.userId = parseInt($stateParams.id);
+    directorySrvc.boardRoute(board)
+  }
 
   // Create board
   $scope.createBoard = (board) => {
@@ -39,12 +45,13 @@ app.controller('directoryCtrl', function($scope, $location, $stateParams, direct
   // Hide / Show - Modal
   $scope.hideModal = () => {
     $scope.showModal = false;
-  };
+  }
 
   // Delete Board
   $scope.deleteBoard = (board) => {
     const userId = parseInt($stateParams.id);
     directorySrvc.deleteBoard(board, userId).then(response => {
+      console.log(response.data);
       $scope.boards = response.data;
     })
   }

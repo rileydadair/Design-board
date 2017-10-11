@@ -35,14 +35,22 @@ app.use('/', express.static(__dirname + '/public'));
 //     res.status(200).json(req.session.user);
 // });
 
-// Endpoints
-app.post('/api/user/checkUser', ctrl.checkUser);
-app.post('/api/users/createUser', ctrl.createUser);
-app.post('/api/user/login', ctrl.login);
-app.post('/api/user/checkBoard', ctrl.checkBoard)
-app.post('/api/user/createBoard', ctrl.createBoard);
-app.post('/api/user/deleteBoard', ctrl.deleteBoard);
-app.get('/api/user/getBoards/:id', ctrl.getBoards);
+/*
+Endpoints ======================================================================
+*/
+// Home Endpoints
+app.post('/user/login', ctrl.login);
+app.get('/user/getUserId/:id', ctrl.getUserId);
+app.post('/user/checkUser', ctrl.checkUser);
+app.post('/user/createUser', ctrl.createUser);
+// Directory Endpoints
+app.get('/user/getUser/:id', ctrl.getUser);
+app.get('/user/getBoards/:id', ctrl.getBoards);
+app.get('/user/getDirectoryImages/:id', ctrl.getDirectoryImages);
+app.post('/user/checkBoard', ctrl.checkBoard);
+app.post('/user/createBoard', ctrl.createBoard);
+app.post('/user/deleteBoard', ctrl.deleteBoard);
+// Board Endpoints
 app.post('/api/user/getBoardName', ctrl.getBoardName);
 app.post('/api/user/addImage', ctrl.addImage);
 app.post('/api/user/addsite', ctrl.addSite);
@@ -51,8 +59,6 @@ app.post('/api/user/deleteSite', ctrl.deleteSite);
 app.get('/api/user/getBoardImages/:id', ctrl.getBoardImages);
 app.post('/api/user/getBoardSites', ctrl.getBoardSites);
 
-app.get('/api/user/:id', ctrl.getUserId);
-app.get('/api/user/getUser/:id', ctrl.getUser);
 
 app.listen(port, function() {
   console.log('Server listening on port', port);

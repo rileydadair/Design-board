@@ -1,5 +1,32 @@
 module.exports = {
 
+  /*
+  Home Endpoints ===============================================================
+  */
+  login: (req, res) => {
+    const email = req.body.email;
+    const db = req.app.get('db');
+    db.get_users().then((users) => {
+      const person = users.find(cur => cur.email == email);
+      if(!person) {
+        res.json({ validUser: 'no user'});
+      }
+      // if (person.password != password) {
+      //   res.send({ validUser: 'incorrect password' });
+      // }
+      // req.session.user = person;
+      res.json({ validUser: 'valid'})
+    })
+  },
+
+  getUserId(req, res) {
+    req.app
+      .get('db')
+      .get_user_id(req.params.id)
+      .then(users => res.json(users))
+      .catch(err => res.json(err));
+  },
+
   checkUser: (req, res) => {
     const email = req.body.email;
     const db = req.app.get('db');
@@ -21,21 +48,31 @@ module.exports = {
       .catch(err => res.json(err));
   },
 
-  login: (req, res) => {
-    const email = req.body.email;
-    // const password = req.body.password;
-    const db = req.app.get('db');
-    db.get_users().then((users) => {
-      const person = users.find(cur => cur.email == email);
-      if(!person) {
-        res.json({ validUser: 'no user'});
-      }
-      // if (person.password != password) {
-      //   res.send({ validUser: 'incorrect password' });
-      // }
-      // req.session.user = person;
-      res.json({ validUser: 'valid'})
-    })
+  /*
+  Directory Endpoints ==========================================================
+  */
+  getUser(req, res) {
+    req.app
+      .get('db')
+      .get_user(req.params.id)
+      .then(users => res.json(users))
+      .catch(err => res.json(err));
+  },
+
+  getBoards(req, res) {
+    req.app
+      .get('db')
+      .get_boards(req.params.id)
+      .then(boards => res.json(boards))
+      .catch(err => res.json(err));
+  },
+
+  getDirectoryImages(req, res) {
+    req.app
+      .get('db')
+      .get_directory_images(req.params.id)
+      .then(boards => res.json(boards))
+      .catch(err => res.json(err));
   },
 
   checkBoard: (req, res) => {
@@ -68,14 +105,9 @@ module.exports = {
       .catch(err => res.json(err));
   },
 
-  getBoards(req, res) {
-    req.app
-      .get('db')
-      .get_boards(req.params.id)
-      .then(boards => res.json(boards))
-      .catch(err => res.json(err));
-  },
-
+  /*
+  Board Endpoints ==============================================================
+  */
   getBoardName(req, res) {
     req.app
       .get('db')
@@ -132,19 +164,4 @@ module.exports = {
       .catch(err => res.json(err));
   },
 
-  getUserId(req, res) {
-    req.app
-      .get('db')
-      .get_user_id(req.params.id)
-      .then(users => res.json(users))
-      .catch(err => res.json(err));
-  },
-
-  getUser(req, res) {
-    req.app
-      .get('db')
-      .get_user(req.params.id)
-      .then(users => res.json(users))
-      .catch(err => res.json(err));
-  },
 }

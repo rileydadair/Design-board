@@ -16,10 +16,10 @@ var app = angular.module('app', ['ui.router', 'ngFileUpload'])
       // }
     })
 
-    .state('profile', {
-      url: '/profile/:id',
-      templateUrl: 'views/profile.html',
-      controller: 'profileCtrl'
+    .state('directory', {
+      url: '/directory/:id',
+      templateUrl: 'views/directory.html',
+      controller: 'directoryCtrl'
       // resolve: {
       //     user: mainSrvc => mainSrvc.getUser()
       //         .then(response => response.data)

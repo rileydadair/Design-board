@@ -19,7 +19,21 @@
   <button ng-click="createBoard(board)">Create</button>
 </section>
 
+
+
+
+
 <section ng-repeat="board in boards">
-  <div ui-sref="board({ board_id: board.board_id, name: board.name })">{{ board.name }}</div>
+
+  <div class="thumbnail-image-container">
+    <div class="thumbnail-container" ui-sref="board({ board_id: board.board_id, name: board.name })">
+      <div class="thumbnail">
+        <img class="board-image" ng-src="{{ images[$index].image_url }}">
+      </div>
+      <div class="board-name">{{ board.name }}</div>
+    </div>
+  </div>
+
+
   <button ng-click="deleteBoard(board.board_id)">X</button>
 </section>

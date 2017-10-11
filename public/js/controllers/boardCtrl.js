@@ -1,79 +1,40 @@
-app.controller('boardCtrl', function($scope, $location, $stateParams, $sce, mainSrvc) {
+app.controller('boardCtrl', function($scope, $timeout, $location, $stateParams, $sce, boardSrvc) {
 
-  // if(user.data) {
-  //   $location.path('/')
-  // };
-  // $scope.user = user;
+  firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+            this.user = user
+            return user
+            console.log(user);
+        };
+        // else { ng-show set to false }
+        console.log(this.user);
+  })
+
   const boardId = $stateParams.board_id;
 
-  mainSrvc.getBoardName(boardId).then(response => {
+  // Get Board Name & Board Images / Sites
+  boardSrvc.getBoardName(boardId).then(response => {
     $scope.boardName = response.data[0].name;
   })
-  mainSrvc.getBoardImages($stateParams).then(response => {
-    $scope.images = response.data.reverse();
+  boardSrvc.getBoardImages($stateParams).then(response => {
+    $scope.images = response.data;
   })
-  mainSrvc.getBoardSites(boardId).then(response => {
+  boardSrvc.getBoardSites(boardId).then(response => {
     console.log(response);
-
-    $scope.sites = response.reverse();
+    $scope.sites = response;
   })
 
-  // ngFileUpload - if image has been selected, invoke upload()
-  // $scope.submit = () => {
-  //     if ($scope.form.image.$valid && $scope.image) {
-  //       $scope.upload($scope.image);
-  //     }
-  //     else {console.log('no image');}
-  //   };
-
-  // Upload Image to firebase
-  $scope.upload = (file) => {
-    const storageRef = firebase.storage().ref();
-    const uploadTask = storageRef.child('images/' + file.name).put(file);
-
-    // Register three observers:
-    // 1. 'state_changed' observer, called any time the state changes
-    // 2. Error observer, called on failure
-    // 3. Completion observer, called on successful completion
-    uploadTask.on('state_changed', (snapshot) => {
-      // Observe state change events such as progress, pause, and resume
-      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log('Upload is ' + progress + '% done');
-      switch (snapshot.state) {
-        case firebase.storage.TaskState.PAUSED: // or 'paused'
-          console.log('Upload is paused');
-          break;
-        case firebase.storage.TaskState.RUNNING: // or 'running'
-          console.log('Upload is running');
-          break;
-      }
-    }, function(error) {
-      // Handle unsuccessful uploads
-    }, function() {
-      // Handle successful uploads on complete
-      // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-      const downloadURL = uploadTask.snapshot.downloadURL;
-
-      // pass download url to database
-      console.log(downloadURL);
-      mainSrvc.addImage(downloadURL, boardId).then(() => {
-        mainSrvc.getBoardImages($stateParams).then((response) => {
-          $scope.images = response.data.reverse();
-        });
-      });
-    });
-  }
-
+  // Delete image
   $scope.deleteImage = (image) => {
     console.log(image);
     const url = image.image_url;
     const boardId = image.board_id
-    mainSrvc.deleteImage(url, boardId).then(response => {
-      $scope.images = response.data.reverse();
+    boardSrvc.deleteImage(url, boardId).then(response => {
+      $scope.images = response.data;
     })
   }
 
+  // Add site
   $scope.addSite = (site) => {
     if(!site){
       console.log('please enter site');
@@ -81,25 +42,41 @@ app.controller('boardCtrl', function($scope, $location, $stateParams, $sce, main
     else {
       const boardId = $stateParams.board_id;
       console.log(boardId);
-      mainSrvc.addSite(site, boardId).then(() => {
-        mainSrvc.getBoardSites(boardId).then(response => {
-          console.log(response);
-
-          $scope.sites = response.reverse();
+      boardSrvc.addSite(site, boardId).then(() => {
+        boardSrvc.getBoardSites(boardId).then(response => {
+          $scope.sites = response;
         })
       })
     }
   }
 
+  // Delete site
   $scope.deleteSite = (site) => {
     console.log(site);
     const url = site.site_url;
     const boardId = site.board_id
-    mainSrvc.deleteSite(url, boardId).then(() => {
-      mainSrvc.getBoardSites(boardId).then(response => {
-        console.log(response);
-        $scope.sites = response.reverse();
+    boardSrvc.deleteSite(url, boardId).then(() => {
+      boardSrvc.getBoardSites(boardId).then(response => {
+        $scope.sites = response;
       })
+    })
+  }
+
+  /*
+    Upload image to Firebase ===================================================
+    Add image_url to database
+    Update $scope.images
+  */
+  $scope.upload = (file) => {
+    file.id = boardId;
+    boardSrvc.upload(file)
+    .then(response => {
+      $timeout(function(){
+        $scope.images = response.data;
+        console.log(response);
+      }, 0)
+
+
     })
   }
 

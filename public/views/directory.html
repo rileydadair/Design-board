@@ -26,6 +26,7 @@
       <iframe ng-src="{{ board.site_url }}" frameborder="0" onload="this.style.opacity = 1"></iframe>
       <img class="board-image" ng-src="{{ board.image_url }}">
     </div>
+    <div class="board-name">{{ board.name }}</div>
     </div>
     <button ng-click="deleteBoard(board.board_id)">X</button>
   </div>

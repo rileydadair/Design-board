@@ -23,6 +23,7 @@ app.service('directorySrvc',function($http, $location, $sce){
     // Endpoint - Get boards
     return $http.get(`/user/getBoards/${params.id}`)
     .then(response => {
+      console.log(response);
       const results = response.data;
       const imagesArr = [];
 
@@ -32,6 +33,7 @@ app.service('directorySrvc',function($http, $location, $sce){
           image_url: $sce.trustAsResourceUrl(results[i].image_url),
           site_url: $sce.trustAsResourceUrl(results[i].site_url),
           reference_url: results[i].reference_url,
+          name: results[i].name,
           title: results[i].title,
           description: results[i].description,
           image_id: results[i].image_id
@@ -86,7 +88,28 @@ app.service('directorySrvc',function($http, $location, $sce){
   */
   this.deleteBoard = (board, userId) => {
     // Endpoint - delete board
-    return $http.post('/user/deleteBoard', [ board, userId ]);
+    return $http.post('/user/deleteBoard', [ board, userId ])
+    .then(response => {
+      console.log(response);
+      const results = response.data;
+      const imagesArr = [];
+
+      for(var i = 0; i < results.length; i++){
+        const obj = {
+          board_id: results[i].board_id,
+          image_url: $sce.trustAsResourceUrl(results[i].image_url),
+          site_url: $sce.trustAsResourceUrl(results[i].site_url),
+          reference_url: results[i].reference_url,
+          name: results[i].name,
+          title: results[i].title,
+          description: results[i].description,
+          image_id: results[i].image_id
+        }
+        imagesArr.push(obj);
+      }
+      return imagesArr;
+
+    })
   }
 
 })

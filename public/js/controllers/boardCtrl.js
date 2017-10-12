@@ -20,18 +20,16 @@ app.controller('boardCtrl', function($scope, $timeout, $location, $stateParams, 
     console.log(response);
     $scope.images = response;
   })
-  boardSrvc.getBoardSites(boardId).then(response => {
-    $scope.sites = response;
-  })
+  // boardSrvc.getBoardSites(boardId).then(response => {
+  //   $scope.sites = response;
+  // })
 
   // Delete image
   $scope.deleteImage = (image) => {
     const imageId = image.image_id;
     const boardId = image.board_id;
-    console.log(image);
     boardSrvc.deleteImage(imageId, boardId).then(response => {
-      console.log(response);
-      $scope.images = response.data;
+      $scope.images = response;
     })
   }
 
@@ -51,16 +49,16 @@ app.controller('boardCtrl', function($scope, $timeout, $location, $stateParams, 
   }
 
   // Delete site
-  $scope.deleteSite = (site) => {
-    console.log(site);
-    const url = site.site_url;
-    const boardId = site.board_id
-    boardSrvc.deleteSite(url, boardId).then(() => {
-      boardSrvc.getBoardSites(boardId).then(response => {
-        $scope.sites = response;
-      })
-    })
-  }
+  // $scope.deleteSite = (site) => {
+  //   console.log(site);
+  //   const url = site.site_url;
+  //   const boardId = site.board_id
+  //   boardSrvc.deleteSite(url, boardId).then(() => {
+  //     boardSrvc.getBoardSites(boardId).then(response => {
+  //       $scope.sites = response;
+  //     })
+  //   })
+  // }
 
   /*
     Upload image to Firebase ===================================================

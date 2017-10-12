@@ -19,16 +19,16 @@
   <button ng-click="createBoard(board)">Create</button>
 </section>
 
-<section ng-repeat="board in boards">
-  <div class="thumbnail-image-container">
+<section>
+  <div class="thumbnail-site-container" ng-repeat="board in boards">
     <div class="thumbnail-container" ng-click="boardRoute(board)">
-      <div class="thumbnail">
-        <img class="board-image" ng-src="{{ board.image_url }}">
-      </div>
-      <div class="board-name">{{ board.name }}</div>
+    <div class="thumbnail">
+      <iframe ng-src="{{ board.site_url }}" frameborder="0" onload="this.style.opacity = 1"></iframe>
+      <img class="board-image" ng-src="{{ board.image_url }}">
     </div>
+    </div>
+    <button ng-click="deleteBoard(board.board_id)">X</button>
   </div>
-  <button ng-click="deleteBoard(board.board_id)">X</button>
 </section>
 
 <!-- ui-sref="board({ board_id: board.board_id, name: board.name })" -->

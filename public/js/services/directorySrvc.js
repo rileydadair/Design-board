@@ -1,4 +1,4 @@
-app.service('directorySrvc',function($http, $location){
+app.service('directorySrvc',function($http, $location, $sce){
 
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
@@ -22,6 +22,25 @@ app.service('directorySrvc',function($http, $location){
   this.getBoards = (params) => {
     // Endpoint - Get boards
     return $http.get(`/user/getBoards/${params.id}`)
+    .then(response => {
+      const results = response.data;
+      const imagesArr = [];
+
+      for(var i = 0; i < results.length; i++){
+        const obj = {
+          board_id: results[i].board_id,
+          image_url: $sce.trustAsResourceUrl(results[i].image_url),
+          site_url: $sce.trustAsResourceUrl(results[i].site_url),
+          reference_url: results[i].reference_url,
+          title: results[i].title,
+          description: results[i].description,
+          image_id: results[i].image_id
+        }
+        imagesArr.push(obj);
+      }
+      return imagesArr;
+
+    })
   }
 
   this.getDirectoryImages = (params) => {

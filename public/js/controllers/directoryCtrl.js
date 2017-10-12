@@ -16,8 +16,8 @@ app.controller('directoryCtrl', function($scope, $location, $stateParams, direct
   })
 
   directorySrvc.getBoards($stateParams).then(response => {
-    console.log(response.data);
-    $scope.boards = response.data;
+    console.log(response);
+    $scope.boards = response;
 
     // directorySrvc.getDirectoryImages($stateParams).then(response => {
     //   console.log(response.data);

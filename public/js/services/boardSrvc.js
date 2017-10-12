@@ -46,36 +46,55 @@ app.service('boardSrvc',function($http, $location, $sce){
   //   return $http.get(`/api/user/getBoardImages/${board.board_id}`);
   // }
 
-  this.getBoardSites = (id) => {
-    return $http.post('/api/user/getBoardSites', [ id ])
-    .then(response => {
-      const results = response.data;
-      const sitesArr = [];
-
-      for(var i = 0; i < results.length; i++){
-        const obj = {
-          trusted_url: $sce.trustAsResourceUrl(results[i].site_url),
-          site_url: results[i].site_url,
-          board_id: results[i].board_id,
-          title: results[i].title,
-          description: results[i].description,
-        }
-        sitesArr.push(obj);
-      }
-      return sitesArr;
-
-    })
-  }
+  // this.getBoardSites = (id) => {
+  //   return $http.post('/api/user/getBoardSites', [ id ])
+  //   .then(response => {
+  //     const results = response.data;
+  //     const sitesArr = [];
+  //
+  //     for(var i = 0; i < results.length; i++){
+  //       const obj = {
+  //         trusted_url: $sce.trustAsResourceUrl(results[i].site_url),
+  //         site_url: results[i].site_url,
+  //         board_id: results[i].board_id,
+  //         title: results[i].title,
+  //         description: results[i].description,
+  //       }
+  //       sitesArr.push(obj);
+  //     }
+  //     return sitesArr;
+  //
+  //   })
+  // }
 
   /*
   Add & delete image ===========================================================
   */
-  this.addImage = (image, boardId) => {
-    return $http.post('/api/user/addImage', [ image, boardId ]);
-  }
+  // this.addImage = (image, boardId) => {
+  //   return $http.post('/api/user/addImage', [ image, boardId ]);
+  // }
 
   this.deleteImage = (imageId, boardId) => {
-    return $http.post('/api/user/deleteImage', [ imageId, boardId ]);
+    return $http.post('/api/user/deleteImage', [ imageId, boardId ])
+    .then(response => {
+      const results = response.data;
+      const imagesArr = [];
+
+      for(var i = 0; i < results.length; i++){
+        const obj = {
+          board_id: results[i].board_id,
+          image_url: $sce.trustAsResourceUrl(results[i].image_url),
+          site_url: $sce.trustAsResourceUrl(results[i].site_url),
+          reference_url: results[i].reference_url,
+          title: results[i].title,
+          description: results[i].description,
+          image_id: results[i].image_id
+        }
+        imagesArr.push(obj);
+      }
+      return imagesArr;
+
+    })
   }
 
   /*
@@ -162,19 +181,19 @@ app.service('boardSrvc',function($http, $location, $sce){
       console.log(downloadURL, boardId, title);
       return $http.post('/api/user/addImage', [ downloadURL, boardId, title ])
       .then(response => {
-        console.log(response);
+
         const results = response.data;
         const imagesArr = [];
 
         for(var i = 0; i < results.length; i++){
           const obj = {
-            boardId: results[i].board_id,
+            board_id: results[i].board_id,
             image_url: $sce.trustAsResourceUrl(results[i].image_url),
             site_url: $sce.trustAsResourceUrl(results[i].site_url),
             reference_url: results[i].reference_url,
             title: results[i].title,
             description: results[i].description,
-            imageId: results[i].image_id
+            image_id: results[i].image_id
           }
           imagesArr.push(obj);
         }
